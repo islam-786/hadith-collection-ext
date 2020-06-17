@@ -1,0 +1,26 @@
+{
+  "name": "Hadith collection",
+  "version": "1.0",
+  "description": "Extension for collecting Hadiths",
+  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "options_page": "options.html",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://sunnah.com/*"],
+      "js": [
+        "jquery.min.js",
+        "hadith_scripts/common.js",
+        "hadith_scripts/bukhari.js",
+        "contentScript.js"
+      ]
+    }
+  ],
+  "manifest_version": 2
+}
