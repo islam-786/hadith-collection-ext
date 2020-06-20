@@ -1,12 +1,23 @@
-function renderHadithCollectionButton(callback) {
+function renderHadithCollectionButton(callback, currentHadithCallback) {
   $("#nonheader").prepend(
     '<div style="text-align:right; padding:10px 10px;">\
-          <button id="ext-hadith-collection-btn">Collect Hadiths</button>\
-          <button id="ext-next-page-btn">Next</button>\
+          <input type="number" value=0 id="ext-hadith-count-start" />\
+          <button id="ext-hadith-collection-btn">Start Collection</button>\
+          <button id="ext-collect-current-hadith-btn">Collect Current Hadith</button>\
       </div>'
   );
   $("#ext-hadith-collection-btn").click(callback);
-  $("#ext-next-page-btn").click(extNextPage);
+  $("#ext-collect-current-hadith-btn").click(currentHadithCallback);
+}
+
+function renderHadithCollectionStart(callback) {
+  $("#nonheader").prepend(
+    '<div style="text-align:right; padding:10px 10px;">\
+          <input type="number" value=0 id="ext-hadith-overall-count" />\
+          <button id="ext-stop-btn">Stop</button>\
+      </div>'
+  );
+  $("#ext-stop-btn").click(callback);
 }
 
 function extNextPage() {
@@ -18,8 +29,23 @@ function extNextPage() {
   window.location = newPath;
 }
 
+function removeCharacters(text, charArray) {
+  let content = text;
+  for (var i = 0; i < charArray.length; i++) {
+    var re = new RegExp(charArray[i], "g");
+    content = content.replace(re, " ");
+  }
+
+  return content;
+}
+
 function removeWhiteSpaces(text) {
   return text.replace(/\s+/g, " ").trim();
+}
+
+function fetchBookNumber() {
+  const url = window.location.href;
+  return parseInt(url.substr(-1));
 }
 
 function fetchContent(selector) {
@@ -28,17 +54,24 @@ function fetchContent(selector) {
 }
 
 function filterChapterName(text) {
-  return removeWhiteSpaces(text.replace("Chapter: ", ""));
+  let content = removeCharacters(text, [
+    "Chapter:",
+    "Chapter.",
+    "بَابُ",
+    "باب",
+  ]);
+  return removeWhiteSpaces(content);
 }
 
 function filterNarratedBy(text) {
-  let narratedBy = text.replace("Narrated '", "");
-  narratedBy = narratedBy.replace(":", "");
+  let narratedBy = removeCharacters(text, ["Narrated", "'", ":", "`"]);
   return removeWhiteSpaces(narratedBy);
 }
 
 function filterHadithContent(text) {
-  return removeWhiteSpaces(text);
+  //let content = text.replace(/\"/g, '\\"');
+  let content = text.replace(/Qur'an/g, "Quran");
+  return removeWhiteSpaces(content);
 }
 
 function hadithCollection(selector) {
@@ -62,25 +95,32 @@ function getChildNode(node, selector) {
   }
 }
 
-function getChildeNodeContent(node, selector, filter = false) {
+function getChildeNodeContent(node, selector, filter = false, getLast = false) {
+  let content;
   for (var i = 0; i < node.childNodes.length; i++) {
     let child = node.childNodes[i];
     if (child.className == selector) {
       if (filter) {
-        return filter(child.innerText);
+        content = filter(child.innerText);
+      } else {
+        content = removeWhiteSpaces(child.innerText);
       }
 
-      return removeWhiteSpaces(child.innerText);
+      if (!getLast) {
+        return content;
+      }
     }
   }
+
+  return content;
 }
 
-function getTextFromChildNode(node, selector, filter = false) {
+function getTextFromChildNode(node, selector, filter = false, getLast = false) {
   if ($.isArray(selector)) {
     let child = node;
     for (var i = 0; i < selector.length; i++) {
       if (i == selector.length - 1) {
-        return getChildeNodeContent(child, selector[i], filter);
+        return getChildeNodeContent(child, selector[i], filter, getLast);
       } else {
         child = getChildNode(child, selector[i]);
       }
