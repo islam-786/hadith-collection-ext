@@ -20,12 +20,14 @@ async function collectCoreHadith() {
   $(selector.overallCount).val(data.overallCount - 1);
   console.log(data.hadiths);
 
-  downloadJSON(data.hadiths, data.bookNumber);
+  //downloadJSON(data.hadiths, data.bookNumber);
 
   if (!currentHadithCollect) {
     const totalPages = await getStorage(selector.totalPages, 0);
     const url = window.location.href;
-    const currentPage = parseInt(url.substr(-1));
+    const urlArr = url.split("/");
+    const pageNumber = urlArr[urlArr.length - 1];
+    const currentPage = parseInt(pageNumber);
 
     if (currentPage < totalPages) {
       extNextPage();

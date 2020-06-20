@@ -1,6 +1,7 @@
 async function getBukhariHadithCollection() {
   const selector = {
     bookName: ".book_page_english_name",
+    bookArabicName: ".book_page_arabic_name",
     chapterName: "englishchapter",
     arabicChapterName: "arabicchapter arabic",
     narratedBy: ["englishcontainer", "english_hadith_full", "hadith_narrated"],
@@ -12,9 +13,17 @@ async function getBukhariHadithCollection() {
     ],
     hadithCollection: ".AllHadith>div",
     hadithCount: "overAllHadithCount",
+    hadithRefNumber: [
+      "bottomItems",
+      "hadith_reference",
+      "index:0",
+      "index:0",
+      "index:1",
+    ],
   };
 
   const bookName = fetchContent(selector.bookName);
+  const bookArabicName = fetchContent(selector.bookArabicName);
   const bookNumber = fetchBookNumber();
   const data = [];
   let overAllHadithCount = await getStorage(selector.hadithCount, 1);
@@ -43,9 +52,19 @@ async function getBukhariHadithCollection() {
       }
     }
 
+    // 4-221
+    // 5 - 272, 273
+    // 6 - 299, 300, 301
+    // 6 329, 330
     if (checkClass(node, classes.hadith)) {
       hadith.book = bookName;
+      hadith.arabicBook = bookArabicName;
       hadith.number = bookNumber;
+      hadith.ref = getTextFromChildNode(
+        node,
+        selector.hadithRefNumber,
+        filterHadithRef
+      );
       hadith.hadithNumber = overAllHadithCount;
       hadith.NumberInBook = hadithCount;
       hadith.chapter = currentChapter;

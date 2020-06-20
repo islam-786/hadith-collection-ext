@@ -21,12 +21,13 @@ function renderHadithCollectionStart(callback) {
 }
 
 function extNextPage() {
-  const url = window.location.href;
-  const nextPage = parseInt(url.substr(-1)) + 1;
-  const path = url.substr(0, url.length - 1);
-  const newPath = path + nextPage;
+  let url = window.location.href;
+  const urlArr = url.split("/");
+  const pageNumber = urlArr[urlArr.length - 1];
+  const nextPage = parseInt(pageNumber) + 1;
+  const newUrl = url.replace(pageNumber, nextPage);
 
-  window.location = newPath;
+  window.location = newUrl;
 }
 
 function removeCharacters(text, charArray) {
@@ -45,11 +46,14 @@ function removeWhiteSpaces(text) {
 
 function fetchBookNumber() {
   const url = window.location.href;
-  return parseInt(url.substr(-1));
+  const urlArr = url.split("/");
+  const pageNumber = urlArr[urlArr.length - 1];
+  return parseInt(pageNumber);
 }
 
 function fetchContent(selector) {
-  const text = $(selector).text();
+  let text = $(selector).text();
+  text = removeCharacters(text, ["'", "`"]);
   return removeWhiteSpaces(text);
 }
 
@@ -60,6 +64,11 @@ function filterChapterName(text) {
     "بَابُ",
     "باب",
   ]);
+  return removeWhiteSpaces(content);
+}
+
+function filterHadithRef(text) {
+  let content = removeCharacters(text, ["Reference", ":", "Sahih al-Bukhari"]);
   return removeWhiteSpaces(content);
 }
 
@@ -87,27 +96,45 @@ function checkClass(node, name) {
 }
 
 function getChildNode(node, selector) {
-  for (var i = 0; i < node.childNodes.length; i++) {
-    let child = node.childNodes[i];
-    if (child.className == selector) {
-      return child;
+  if (selector.includes("index")) {
+    let index = parseInt(selector.split(":")[1]);
+    return node.childNodes[index];
+  } else {
+    for (var i = 0; i < node.childNodes.length; i++) {
+      let child = node.childNodes[i];
+      if (child.className == selector) {
+        return child;
+      }
     }
   }
 }
 
 function getChildeNodeContent(node, selector, filter = false, getLast = false) {
   let content;
-  for (var i = 0; i < node.childNodes.length; i++) {
-    let child = node.childNodes[i];
-    if (child.className == selector) {
-      if (filter) {
-        content = filter(child.innerText);
-      } else {
-        content = removeWhiteSpaces(child.innerText);
-      }
 
-      if (!getLast) {
-        return content;
+  if (selector.includes("index")) {
+    if (filter) {
+      content = filter(node.innerText);
+    } else {
+      content = removeWhiteSpaces(node.innerText);
+    }
+
+    if (!getLast) {
+      return content;
+    }
+  } else {
+    for (var i = 0; i < node.childNodes.length; i++) {
+      let child = node.childNodes[i];
+      if (child.className == selector) {
+        if (filter) {
+          content = filter(child.innerText);
+        } else {
+          content = removeWhiteSpaces(child.innerText);
+        }
+
+        if (!getLast) {
+          return content;
+        }
       }
     }
   }
