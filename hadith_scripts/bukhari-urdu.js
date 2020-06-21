@@ -19,18 +19,23 @@ async function getBukhariUrduHadithCollection() {
     let node = this;
 
     if (checkClass(node, classes.hadith)) {
-      hadith.narratedBy = getTextFromChildNode(
-        node,
-        selector.narratedBy,
-        filterNarratedBy
-      );
-      hadithContent = getTextFromChildNode(
-        node,
-        selector.hadithContent,
-        filterHadithContent
-      );
+      try {
+        hadith.narratedBy = getTextFromChildNode(
+          node,
+          selector.narratedBy,
+          filterNarratedBy
+        );
+        hadithContent = getTextFromChildNode(
+          node,
+          selector.hadithContent,
+          filterHadithContent
+        );
 
-      hadith.text = filterUrduHadithContent(hadithContent);
+        hadith.text = filterUrduHadithContent(hadithContent);
+      } catch (error) {
+        hadith.narratedBy = "Urdu not found";
+        hadith.text = "Urdu not found";
+      }
       data.push(hadith);
 
       hadithCount++;
