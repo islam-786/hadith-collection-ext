@@ -1,7 +1,5 @@
 const selector = {
   countStart: "#ext-hadith-count-start",
-  overallCount: "#ext-hadith-overall-count",
-  hadithCount: "overAllHadithCount",
   startHadith: "startHadith",
   totalPages: "totalPages",
 };
@@ -14,13 +12,12 @@ const classes = {
 let currentHadithCollect = false;
 
 async function collectCoreHadith() {
-  const data = await getBukhariHadithCollection();
+  const data = await getBukhariUrduHadithCollection();
+  //const data = await getBukhariHadithCollection();
 
-  await setStorage(selector.hadithCount, data.overallCount);
-  $(selector.overallCount).val(data.overallCount - 1);
-  console.log(data.hadiths);
+  //console.log(data.hadiths);
 
-  //downloadJSON(data.hadiths, data.bookNumber);
+  downloadJSON(data.hadiths, data.bookNumber);
 
   if (!currentHadithCollect) {
     const totalPages = await getStorage(selector.totalPages, 0);
@@ -32,8 +29,6 @@ async function collectCoreHadith() {
     if (currentPage < totalPages) {
       extNextPage();
     } else {
-      await removeStorage(selector.startHadith);
-      await removeStorage(selector.hadithCount);
       await removeStorage(selector.startHadith);
       await removeStorage(selector.totalPages);
     }
@@ -56,7 +51,6 @@ async function startCollectingCoreHadith() {
 }
 
 async function stopHadithCollection() {
-  await removeStorage(selector.startHadith);
   await removeStorage(selector.startHadith);
   await removeStorage(selector.totalPages);
 }

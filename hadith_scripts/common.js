@@ -13,7 +13,6 @@ function renderHadithCollectionButton(callback, currentHadithCallback) {
 function renderHadithCollectionStart(callback) {
   $("#nonheader").prepend(
     '<div style="text-align:right; padding:10px 10px;">\
-          <input type="number" value=0 id="ext-hadith-overall-count" />\
           <button id="ext-stop-btn">Stop</button>\
       </div>'
   );
@@ -61,6 +60,7 @@ function filterChapterName(text) {
   let content = removeCharacters(text, [
     "Chapter:",
     "Chapter.",
+    "Chapter",
     "بَابُ",
     "باب",
   ]);
@@ -73,7 +73,8 @@ function filterHadithRef(text) {
 }
 
 function filterNarratedBy(text) {
-  let narratedBy = removeCharacters(text, ["Narrated", "'", ":", "`"]);
+  //let narratedBy = removeCharacters(text, ["Narrated", "'", ":", "`"]);
+  let narratedBy = text;
   return removeWhiteSpaces(narratedBy);
 }
 

@@ -20,6 +20,7 @@
         "download-json-data.js",
         "hadith_scripts/common.js",
         "hadith_scripts/bukhari.js",
+        "hadith_scripts/bukhari-urdu.js",
         "hadith_scripts/core.js",
         "contentScript.js"
       ]
