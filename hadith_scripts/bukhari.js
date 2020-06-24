@@ -66,32 +66,34 @@ async function getBukhariHadithCollection() {
       hadith.NumberInBook = hadithCount;
       hadith.chapter = currentChapter;
       hadith.arabicChapter = currentArabicChapter;
-      hadith.narratedBy = getTextFromChildNode(
-        node,
-        selector.narratedBy,
-        filterNarratedBy
-      );
-      hadith.narratedByArabic = getTextFromChildNode(
-        node,
-        selector.narratedByArabic,
-        filterNarratedBy
-      );
-      hadith.narratedByDetail = getTextFromChildNode(
-        node,
-        selector.narratedByArabic,
-        filterNarratedBy,
-        true
-      );
-      hadith.text = getTextFromChildNode(
-        node,
-        selector.hadithContent,
-        filterHadithContent
-      );
-      hadith.arabicText = getTextFromChildNode(
-        node,
-        selector.hadithArabicContent,
-        filterHadithContent
-      );
+      hadith.narratedBy =
+        getTextFromChildNode(node, selector.narratedBy, filterNarratedBy) ||
+        "Not found";
+      hadith.narratedByArabic =
+        getTextFromChildNode(
+          node,
+          selector.narratedByArabic,
+          filterNarratedBy
+        ) || "Not found";
+      hadith.narratedByDetail =
+        getTextFromChildNode(
+          node,
+          selector.narratedByArabic,
+          filterNarratedBy,
+          true
+        ) || "Not found";
+      hadith.text =
+        getTextFromChildNode(
+          node,
+          selector.hadithContent,
+          filterHadithContent
+        ) || "Not found";
+      hadith.arabicText =
+        getTextFromChildNode(
+          node,
+          selector.hadithArabicContent,
+          filterHadithContent
+        ) || "Not found";
 
       data.push(hadith);
 

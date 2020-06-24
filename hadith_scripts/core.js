@@ -12,12 +12,12 @@ const classes = {
 let currentHadithCollect = false;
 
 async function collectCoreHadith() {
-  const data = await getBukhariUrduHadithCollection();
-  //const data = await getBukhariHadithCollection();
+  //const data = await getBukhariUrduHadithCollection();
+  const data = await getBukhariHadithCollection();
 
-  //console.log(data.hadiths);
+  console.log(data.hadiths);
 
-  downloadJSON(data.hadiths, data.bookNumber);
+  //downloadJSON(data.hadiths, data.bookNumber);
 
   if (!currentHadithCollect) {
     const totalPages = await getStorage(selector.totalPages, 0);

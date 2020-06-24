@@ -57,13 +57,7 @@ function fetchContent(selector) {
 }
 
 function filterChapterName(text) {
-  let content = removeCharacters(text, [
-    "Chapter:",
-    "Chapter.",
-    "Chapter",
-    "بَابُ",
-    "باب",
-  ]);
+  let content = removeCharacters(text, ["Chapter:", "Chapter.", "Chapter"]);
   return removeWhiteSpaces(content);
 }
 
@@ -75,13 +69,23 @@ function filterHadithRef(text) {
 function filterNarratedBy(text) {
   //let narratedBy = removeCharacters(text, ["Narrated", "'", ":", "`"]);
   let narratedBy = text;
-  return removeWhiteSpaces(narratedBy);
+  narratedBy = removeWhiteSpaces(narratedBy);
+  if (!narratedBy) {
+    return "Not found";
+  } else {
+    return narratedBy;
+  }
 }
 
 function filterHadithContent(text) {
   //let content = text.replace(/\"/g, '\\"');
   let content = text.replace(/Qur'an/g, "Quran");
-  return removeWhiteSpaces(content);
+  content = removeWhiteSpaces(content);
+  if (!content) {
+    return "Not found";
+  } else {
+    return content;
+  }
 }
 
 function hadithCollection(selector) {
