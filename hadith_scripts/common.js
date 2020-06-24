@@ -68,7 +68,8 @@ function filterHadithRef(text) {
 
 function filterNarratedBy(text) {
   //let narratedBy = removeCharacters(text, ["Narrated", "'", ":", "`"]);
-  let narratedBy = text;
+  let narratedBy = removeCharacters(text, [":"]);
+  //let narratedBy = text;
   narratedBy = removeWhiteSpaces(narratedBy);
   if (!narratedBy) {
     return "Not found";
