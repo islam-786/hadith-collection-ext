@@ -13,11 +13,18 @@ let currentHadithCollect = false;
 
 async function collectCoreHadith() {
   //const data = await getBukhariUrduHadithCollection();
-  const data = await getBukhariHadithCollection();
+  let data;
 
-  //console.log(data.hadiths);
+  const pathname = window.location.pathname;
+  if (pathname.includes("bukhari")) {
+    data = await getBukhariHadithCollection();
+  } else if (pathname.includes("muslim")) {
+    data = await getMuslimHadithCollection();
+  }
 
-  downloadJSON(data.hadiths, data.bookNumber);
+  console.log(data);
+
+  //downloadJSON(data.hadiths, data.bookNumber);
 
   if (!currentHadithCollect) {
     const totalPages = await getStorage(selector.totalPages, 0);

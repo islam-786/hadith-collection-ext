@@ -66,6 +66,11 @@ function filterHadithRef(text) {
   return removeWhiteSpaces(content);
 }
 
+function filterHadithRefMuslim(text) {
+  let content = removeCharacters(text, ["Reference", ":", "Sahih Muslim"]);
+  return removeWhiteSpaces(content);
+}
+
 function filterNarratedBy(text) {
   //let narratedBy = removeCharacters(text, ["Narrated", "'", ":", "`"]);
   let narratedBy = removeCharacters(text, [":"]);
@@ -94,7 +99,7 @@ function hadithCollection(selector) {
 }
 
 function checkClass(node, name) {
-  if (node.className == name) {
+  if (node.className.includes(name)) {
     return true;
   }
 
