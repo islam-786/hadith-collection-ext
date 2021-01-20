@@ -20,11 +20,12 @@ async function collectCoreHadith() {
     data = await getBukhariHadithCollection();
   } else if (pathname.includes("muslim")) {
     data = await getMuslimHadithCollection();
+  } else if (pathname.includes("nasai")) {
+    data = await getNasaiHadithCollection();
   }
 
-  console.log(data);
-
-  //downloadJSON(data.hadiths, data.bookNumber);
+  //console.log(data);
+  downloadJSON(data.hadiths, data.bookNumber);
 
   if (!currentHadithCollect) {
     const totalPages = await getStorage(selector.totalPages, 0);

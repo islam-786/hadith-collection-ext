@@ -1,4 +1,4 @@
-async function getMuslimHadithCollection() {
+async function getNasaiHadithCollection() {
   const selector = {
     bookName: ".book_page_english_name",
     bookArabicName: ".book_page_arabic_name",
@@ -15,6 +15,13 @@ async function getMuslimHadithCollection() {
     hadithRefNumber: [
       "bottomItems",
       "hadith_reference",
+      "index:0",
+      "index:0",
+      "index:1",
+    ],
+    hadithGrade: [
+      "bottomItems",
+      "hadith_annotation",
       "index:0",
       "index:0",
       "index:1",
@@ -58,10 +65,15 @@ async function getMuslimHadithCollection() {
       hadith.book = bookName;
       hadith.arabicBook = bookArabicName;
       hadith.bookNumber = bookNumber;
+      hadith.grade = getTextFromChildNode(
+        node,
+        selector.hadithGrade,
+        filterHadithGradeNasai
+      );
       hadith.hadithNumber = getTextFromChildNode(
         node,
         selector.hadithRefNumber,
-        filterHadithRefMuslim
+        filterHadithRefNasai
       );
       hadith.NumberInBook = hadithCount;
       hadith.chapter = currentChapter;
@@ -106,4 +118,28 @@ async function getMuslimHadithCollection() {
     hadiths: data,
     bookNumber: bookNumber,
   };
+}
+
+function filterHadithRefNasai(text) {
+  let content = removeCharacters(text, [
+    "Reference",
+    ":",
+    "Sunan an-Nasa'i",
+    "Arabic",
+    "/",
+    "English ",
+    "book reference",
+    "Vol.",
+    " 1,",
+    "Book 1,",
+    "Book",
+    "Hadith",
+    "reference",
+  ]);
+  return removeWhiteSpaces(content);
+}
+
+function filterHadithGradeNasai(text) {
+  let content = removeCharacters(text, ["Grade", ":"]);
+  return removeWhiteSpaces(content);
 }

@@ -47,7 +47,11 @@ function fetchBookNumber() {
   const url = window.location.href;
   const urlArr = url.split("/");
   const pageNumber = urlArr[urlArr.length - 1];
-  return parseInt(pageNumber);
+  if (!!parseInt(pageNumber)) {
+    return parseInt(pageNumber);
+  } else {
+    return 0;
+  }
 }
 
 function fetchContent(selector) {
@@ -67,7 +71,12 @@ function filterHadithRef(text) {
 }
 
 function filterHadithRefMuslim(text) {
-  let content = removeCharacters(text, ["Reference", ":", "Sahih Muslim"]);
+  let content = removeCharacters(text, [
+    "Reference",
+    ":",
+    "Sahih Muslim",
+    "Introduction",
+  ]);
   return removeWhiteSpaces(content);
 }
 
@@ -107,6 +116,9 @@ function checkClass(node, name) {
 }
 
 function getChildNode(node, selector) {
+  if (!node) {
+    return;
+  }
   if (selector.includes("index")) {
     let index = parseInt(selector.split(":")[1]);
     return node.childNodes[index];
@@ -122,6 +134,10 @@ function getChildNode(node, selector) {
 
 function getChildeNodeContent(node, selector, filter = false, getLast = false) {
   let content;
+
+  if (!node) {
+    return;
+  }
 
   if (selector.includes("index")) {
     if (filter) {
